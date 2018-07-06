@@ -1,4 +1,5 @@
 import os
+import subprocess
 import argparse
 import requests
 
@@ -16,10 +17,6 @@ class structureGenerator(object):
         self.flags = flags
 
 
-    def getText(self):
-        r = requests.get('https://raw.githubusercontent.com/kennethreitz/setup.py/master/setup.py')
-
-
     def generateFolders(self):
         """Generates the folders needed in the structure"""
         dirs = ["docs", "tests", self.flags.projectname]
@@ -31,7 +28,7 @@ class structureGenerator(object):
         """Generates standard files for a python project in recommended locations"""
         files_base = [
                 "README.md",
-                "LICENS",
+                "LICENSE.txt",
                 "setup.py",
                 "requirements.txt"
                 ]
@@ -68,11 +65,23 @@ class structureGenerator(object):
                 os.chdir("{}/{}".format(base_dir,k))
             cur_dir = os.getcwd()
             for j in v:
-                with open("{}{}{}".format(cur_dir, "/", j), 'w+') as f:
-                    if j is "setup.py":
-                        f.write(r.text)
-                    else:
-                        f.write("Placeholder")
+                if j is "LICENSE.txt":
+                    with open("{}{}{}".format(cur_dir, "/", j), 'wb') as f:
+                        licens = subprocess.check_output(
+                                'lice {}'.format(self.flags.licens), shell=True
+                            )
+                        f.write(licens)
+                else:
+                    with open("{}{}{}".format(cur_dir, "/", j), 'w+') as f:
+                        if j is "setup.py":
+                            r = requests.get('https://raw.githubusercontent.com/kennethreitz/setup.py/master/setup.py')
+                            f.write(r.text)
+                        elif j is "LICENSE.txt":
+                            licens = subprocess.check_output(
+                                'lice {}'.format(self.flags.licens), shell=True
+                            )
+                            f.write(str(licens))
+
 
     def run(self):
         self.generateFolders()
