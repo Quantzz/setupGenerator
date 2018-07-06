@@ -1,5 +1,7 @@
 import os
 import argparse
+import requests
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-p", "--projectname", required = True
@@ -12,6 +14,10 @@ class structureGenerator(object):
 
     def __init__(self, flags):
         self.flags = flags
+
+
+    def getText(self):
+        r = requests.get('https://raw.githubusercontent.com/kennethreitz/setup.py/master/setup.py')
 
 
     def generateFolders(self):
@@ -62,7 +68,11 @@ class structureGenerator(object):
                 os.chdir("{}/{}".format(base_dir,k))
             cur_dir = os.getcwd()
             for j in v:
-                open("{}{}{}".format(cur_dir, "/", j), 'w+')
+                with open("{}{}{}".format(cur_dir, "/", j), 'w+') as f:
+                    if j is "setup.py":
+                        f.write(r.text)
+                    else:
+                        f.write("Placeholder")
 
     def run(self):
         self.generateFolders()
