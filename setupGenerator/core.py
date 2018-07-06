@@ -9,9 +9,13 @@ parser.add_argument("-p", "--projectname", required = True
                     , help = "Name of project")
 parser.add_argument("-l", "--licens"
                     , required = True,  help = "Type of licens for your project")
+parser.add_argument("-y", "--year"
+                    , required = True,  help = "Year of copyright for LICENSE")
+parser.add_argument("-o", "--author"
+                    , required = True,  help = "Author of library for LICENSE")
 
 class structureGenerator(object):
-
+    """WILL WRITE COMMENTS LATER...MAYBE"""
 
     def __init__(self, flags):
         self.flags = flags
@@ -68,8 +72,11 @@ class structureGenerator(object):
                 if j is "LICENSE.txt":
                     with open("{}{}{}".format(cur_dir, "/", j), 'wb') as f:
                         licens = subprocess.check_output(
-                                'lice {}'.format(self.flags.licens), shell=True
-                            )
+                                'lice {} -y={} -o=\"{}\"'.format(self.flags.licens,
+                                                             int(self.flags.year),
+                                                             str(self.flags.author)),
+                                                             shell=True
+                                                            )
                         f.write(licens)
                 else:
                     with open("{}{}{}".format(cur_dir, "/", j), 'w+') as f:
