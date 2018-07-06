@@ -76,11 +76,6 @@ class structureGenerator(object):
                         if j is "setup.py":
                             r = requests.get('https://raw.githubusercontent.com/kennethreitz/setup.py/master/setup.py')
                             f.write(r.text)
-                        elif j is "LICENSE.txt":
-                            licens = subprocess.check_output(
-                                'lice {}'.format(self.flags.licens), shell=True
-                            )
-                            f.write(str(licens))
 
 
     def run(self):
